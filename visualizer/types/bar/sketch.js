@@ -6,7 +6,7 @@ let ww = window.innerWidth;
 let wh = window.innerHeight;
 let pow;
 let bcolor;
-let barcolor;
+let fillcolor;
 let linecolor;
 let lineWeight;
 let barRange = [];
@@ -26,10 +26,10 @@ if (localStorage.getItem('bcolor') === null) {
     bcolor = localStorage.getItem('bcolor');
 }
 
-if (localStorage.getItem('barcolor') === null) {
-    barcolor = "#ffffff"
+if (localStorage.getItem('fillcolor') === null) {
+    fillcolor = "#ffffff"
 } else {
-    barcolor = localStorage.getItem('barcolor');
+    fillcolor = localStorage.getItem('fillcolor');
 }
 
 
@@ -70,7 +70,7 @@ if (localStorage.getItem('vis') === null) {
 }
 
 if (localStorage.getItem('barMargin') === null) {
-    barMargin = 0;
+    barMargin = 5;
 } else {
     barMargin = Number(localStorage.getItem('barMargin'));
 }
@@ -101,14 +101,14 @@ function draw() {
 
         strokeWeight(lineWeight);
         stroke(linecolor);
-        fill(barcolor);
+        fill(fillcolor);
 
         switch (vis) {
             case "bars":
                 bars(amp, l, i);
                 break;
-            case "circle":
-                bcircle(amp, l, i);
+            case "bar_circle":
+                bar_circle(amp, l, i);
                 break;
             case "doubleBars":
                 doubleBars(amp, l, i);
@@ -134,7 +134,7 @@ function bars(amp, l, i) {
 
 }
 
-function bcircle(amp, l, i) {
+function bar_circle(amp, l, i) {
 
     let y = -amp * Math.pow(i + 1, 1 / 5) * wh / 690 * h + wh / 2;
 
