@@ -57,7 +57,7 @@ if (localStorage.getItem('height') === null) {
 }
 
 if (localStorage.getItem('vis') === null) {
-    vis = "bars";
+    vis = "line";
 } else {
     vis = localStorage.getItem('vis');
 }
@@ -92,7 +92,7 @@ function draw() {
     let spectrum = fft.analyze();
     let start = Math.floor((spectrum.length / 3) / 100 * barRange[0]);
     let stop = (spectrum.length / 3) / 100 * barRange[1];
-    let l = stop - start;
+    let l = Math.floor(stop - start);
     noStroke();
     fill(fillcolor);
     translate(width / 2, height / 2);
@@ -100,21 +100,46 @@ function draw() {
         noFill();
     }
     beginShape();
-    if (lineFill) {
-        curveVertex(calX(l, 0), wh / 2 - 20);
-        curveVertex(calX(l, 0), wh / 2 - 20);
-    }
-    for (let i = 0; i < l; i++) {
-        let amp = spectrum[i + start] * 2.1;
-        strokeWeight(lineWeight);
-        stroke(linecolor);
-        let x = calX(l, i);
-        let y = calY(amp, i);
-        curveVertex(x, y > 0 ? wh / 2 - 20 : y + wh / 2 - 20);
-    }
-    if (lineFill) {
-        curveVertex(calX(l, l), wh / 2 - 20);
-        curveVertex(calX(l, l), wh / 2 - 20);
+    strokeWeight(lineWeight);
+    if (vis === "line") {
+        if (lineFill) {
+            curveVertex(calX(l, 0), wh / 2 - 20);
+            curveVertex(calX(l, 0), wh / 2 - 20);
+        }
+        for (let i = 0; i < l; i++) {
+            let amp = spectrum[i + start] * 2.1;
+
+            stroke(linecolor);
+            let x = calX(l, i);
+            let y = calY(amp, i);
+            curveVertex(x, y > 0 ? wh / 2 - 20 : y + wh / 2 - 20);
+        }
+        if (lineFill) {
+            curveVertex(calX(l, l), wh / 2 - 20);
+            curveVertex(calX(l, l), wh / 2 - 20);
+        }
+    } else {
+
+        for (let i = 0; i < l; i++) {
+            let angle = map(i, 1, l - 1, 0, 180) - 90;
+            let amp = spectrum[i + start] * 2.1;
+            let x = (calY(amp, i) - 50) * cos(angle);
+            let y = (calY(amp, i) - 50) * sin(angle);
+            stroke(linecolor);
+            curveVertex(x, y);
+        }
+        for (let i = l - 2; i >= 0; i--) {
+            console.log(i);
+            let angle = map(i, 1, l - 1, 0, 180) - 90;
+            let amp = spectrum[i + start] * 2.1;
+            let x = (calY(amp, i) - 50) * cos(angle);
+            let y = (calY(amp, i) - 50) * sin(angle);
+            stroke(linecolor);
+            curveVertex(-x, y);
+            console.log(i === (l - 10), i, l - 10);
+        }
+
+
     }
     endShape();
 }
@@ -124,5 +149,6 @@ function calX(l, i) {
 }
 
 function calY(amp, i) {
-    return -amp * Math.pow(i + 1, 1 / 5) * wh / 456 * h + wh / 2;
+    const y = -amp * Math.pow(i + 1, 1 / 5) * wh / 456 * h + wh / 2;
+    return y > 0 ? 0 : y;
 }
