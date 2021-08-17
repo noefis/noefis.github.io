@@ -100,7 +100,7 @@ function draw() {
         noFill();
     }
     beginShape();
-    strokeWeight(lineWeight);
+    strokeWeight(lineWeight <= 0 ? 1 : lineWeight);
     if (vis === "line") {
         if (lineFill) {
             curveVertex(calX(l, 0), wh / 2 - 20);
@@ -108,8 +108,9 @@ function draw() {
         }
         for (let i = 0; i < l; i++) {
             let amp = spectrum[i + start] * 2.1;
-
-            stroke(linecolor);
+            if (lineWeight > 0) {
+                stroke(linecolor);
+            }
             let x = calX(l, i);
             let y = calY(amp, i);
             curveVertex(x, y > 0 ? wh / 2 - 20 : y + wh / 2 - 20);
@@ -125,7 +126,9 @@ function draw() {
             let amp = spectrum[i + start] * 2.1;
             let x = (calY(amp, i) - 50) * cos(angle);
             let y = (calY(amp, i) - 50) * sin(angle);
-            stroke(linecolor);
+            if (lineWeight > 0) {
+                stroke(linecolor);
+            }
             curveVertex(x, y);
         }
         for (let i = l - 2; i >= 0; i--) {
@@ -134,7 +137,9 @@ function draw() {
             let amp = spectrum[i + start] * 2.1;
             let x = (calY(amp, i) - 50) * cos(angle);
             let y = (calY(amp, i) - 50) * sin(angle);
-            stroke(linecolor);
+            if (lineWeight > 0) {
+                stroke(linecolor);
+            }
             curveVertex(-x, y);
             console.log(i === (l - 10), i, l - 10);
         }

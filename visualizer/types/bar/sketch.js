@@ -100,9 +100,10 @@ function draw() {
         const amp = spectrum[i + start] * 2.1;
         const round = barMargin >= 5 ? -(ww / l * 0.75 - 3) : 0;
         const width = ww / l * 0.75 - 3;
-
-        strokeWeight(lineWeight);
-        stroke(linecolor);
+        if (lineWeight > 0) {
+            strokeWeight(lineWeight);
+            stroke(linecolor);
+        }
 
         fill(fillcolor);
 
