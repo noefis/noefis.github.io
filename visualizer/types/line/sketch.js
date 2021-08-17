@@ -13,6 +13,8 @@ let h;
 let vis;
 let lineFill;
 let fillcolor;
+let lineCircleSize;
+let lineCircleShow;
 
 if (localStorage.getItem('barMultiple') === null) {
     pow = 9;
@@ -68,11 +70,23 @@ if (localStorage.getItem('lineFill') === null) {
     lineFill = 'true' === localStorage.getItem('lineFill');
 }
 
+if (localStorage.getItem('showLineCircle') === null) {
+    lineCircleShow = false;
+} else {
+    lineCircleShow = 'true' === localStorage.getItem('showLineCircle');
+}
+
 
 if (localStorage.getItem('fillcolor') === null) {
     fillcolor = "#ffffff"
 } else {
     fillcolor = localStorage.getItem('fillcolor');
+}
+
+if (localStorage.getItem('lineCircleSize') === null) {
+    lineCircleSize = 50;
+} else {
+    lineCircleSize = Number(localStorage.getItem('lineCircleSize'));
 }
 
 
@@ -124,8 +138,8 @@ function draw() {
         for (let i = 0; i < l; i++) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
             let amp = spectrum[i + start] * 2.1;
-            let x = (calY(amp, i) - 50) * cos(angle);
-            let y = (calY(amp, i) - 50) * sin(angle);
+            let x = (calY(amp, i) - lineCircleSize) * cos(angle);
+            let y = (calY(amp, i) - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
@@ -135,8 +149,8 @@ function draw() {
             console.log(i);
             let angle = map(i, 1, l - 1, 0, 180) - 90;
             let amp = spectrum[i + start] * 2.1;
-            let x = (calY(amp, i) - 50) * cos(angle);
-            let y = (calY(amp, i) - 50) * sin(angle);
+            let x = (calY(amp, i) - lineCircleSize) * cos(angle);
+            let y = (calY(amp, i) - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
@@ -147,6 +161,9 @@ function draw() {
 
     }
     endShape();
+    if (vis === "line_circle" && lineCircleShow) {
+        circle(0, 0, lineCircleSize * 2);
+    }
 }
 
 function calX(l, i) {
