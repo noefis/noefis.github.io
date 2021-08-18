@@ -146,7 +146,6 @@ function draw() {
             curveVertex(x, y);
         }
         for (let i = l - 2; i >= 0; i--) {
-            console.log(i);
             let angle = map(i, 1, l - 1, 0, 180) - 90;
             let amp = spectrum[i + start] * 2.1;
             let x = (calY(amp, i) - lineCircleSize) * cos(angle);
@@ -155,7 +154,6 @@ function draw() {
                 stroke(linecolor);
             }
             curveVertex(-x, y);
-            console.log(i === (l - 10), i, l - 10);
         }
 
 
