@@ -13,7 +13,6 @@ if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSo
     } else {
         console.log("p");
         errorP.innerHTML = "You need to select a song first...";
-        errorP.style = "color: white";
         micOrSound = "none";
     }
 }
