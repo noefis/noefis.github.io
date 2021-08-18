@@ -132,7 +132,7 @@ function draw() {
             curveVertex(calX(l, 0), wh / 2 - 20);
         }
         for (let i = 0; i < l; i++) {
-            let amp = spectrum[i + start] * 2.1;
+            let amp = spectrum[i + start];
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
@@ -148,7 +148,7 @@ function draw() {
 
         for (let i = 0; i < l; i++) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start] * 2.1;
+            let amp = spectrum[i + start];
             let x = (calY(amp, i) - lineCircleSize) * cos(angle);
             let y = (calY(amp, i) - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
@@ -158,7 +158,7 @@ function draw() {
         }
         for (let i = l - 2; i >= 0; i--) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start] * 2.1;
+            let amp = spectrum[i + start];
             let x = (calY(amp, i) - lineCircleSize) * cos(angle);
             let y = (calY(amp, i) - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
