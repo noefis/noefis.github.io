@@ -7,12 +7,12 @@ let micOrSound = "mic_types";
 
 if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSound') === "sound") {
     var errorP = document.getElementById('errorP');
-    if (localStorage.getItem('musicName') !== null) {
+    if (localStorage.getItem('musicData') !== null) {
         micOrSound = "load_types";
         errorP.parentNode.removeChild(errorP);
     } else {
         console.log("p");
-        errorP.innerHTML = "You need to select a song first...";
+        errorP.innerHTML = "Could not load Audio";
         micOrSound = "none";
     }
 }
