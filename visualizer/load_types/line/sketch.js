@@ -144,13 +144,14 @@ function draw() {
             curveVertex(calX(l, l), wh / 2 - 20);
             curveVertex(calX(l, l), wh / 2 - 20);
         }
-    } else {
+    } else if (vis === "line_circle") {
 
         for (let i = 0; i < l; i++) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
             let amp = spectrum[i + start];
-            let x = (calY(amp, i) - lineCircleSize) * cos(angle);
-            let y = (calY(amp, i) - lineCircleSize) * sin(angle);
+            let height = calY(amp, i);
+            let x = (height - lineCircleSize) * cos(angle);
+            let y = (height - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
@@ -159,18 +160,59 @@ function draw() {
         for (let i = l - 2; i >= 0; i--) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
             let amp = spectrum[i + start];
-            let x = (calY(amp, i) - lineCircleSize) * cos(angle);
-            let y = (calY(amp, i) - lineCircleSize) * sin(angle);
+            let height = calY(amp, i);
+            let x = (height - lineCircleSize) * cos(angle);
+            let y = (height - lineCircleSize) * sin(angle);
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
             curveVertex(-x, y);
         }
-
-
+    } else {
+        let max_amp = 0;
+        for (let i = 0; i < l; i++) {
+            let angle = map(i, 1, l - 1, 0, 180) - 90;
+            let amp = spectrum[i + start];
+            let height = calY(amp, i);
+            if (max_amp < Math.abs(height)) {
+                max_amp = Math.abs(height);
+            }
+            let x = (height - lineCircleSize) * cos(angle);
+            let y = (height - lineCircleSize) * sin(angle);
+            if (lineWeight > 0) {
+                stroke(bcolor);
+            }
+            curveVertex(x, y);
+        }
+        for (let i = l - 2; i >= 0; i--) {
+            let angle = map(i, 1, l - 1, 0, 180) - 90;
+            let amp = spectrum[i + start];
+            let height = calY(amp, i);
+            let x = (height - lineCircleSize) * cos(angle);
+            let y = (height - lineCircleSize) * sin(angle);
+            if (lineWeight > 0) {
+                stroke(bcolor);
+            }
+            curveVertex(-x, y);
+        }
+        let z = (max_amp / wh * 180 % 360);
+        let c = color(abs(z - 31 % 360), 100, z - 10);
+        alpha = z / 2 - 10 < 0 ? 0 : z / 2 - 10;
+        lc = color(linecolor);
+        lc.setAlpha(alpha);
+        console.log(alpha);
+        if (lineWeight > 0) {
+            stroke(lc);
+        }
+        fill(c);
     }
     endShape();
-    if (vis === "line_circle" && lineCircleShow) {
+    if (vis !== "line" && lineCircleShow) {
+        lc = color(linecolor);
+        lc.setAlpha(alpha);
+        if (lineWeight > 0) {
+            stroke(lc);
+        }
         circle(0, 0, lineCircleSize * 2);
     }
 }
