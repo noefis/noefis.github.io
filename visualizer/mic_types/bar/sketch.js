@@ -106,7 +106,7 @@ function draw() {
     noStroke();
     translate(width / 2, height / 2);
     for (let i = 0; i < l; i++) {
-        const amp = spectrum[i + start] * 2.1;
+        const amp = spectrum[i + start] * 2.1 * (((pow / 2.6) / (i + 5)) + 1);
         const round = barMargin >= 5 ? -(ww / l * 0.75 - 3) : 0;
         const width = ww / l * 0.75 - 3;
         if (lineWeight > 0) {

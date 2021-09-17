@@ -143,7 +143,7 @@ function draw() {
             curveVertex(calX(l, 0), wh / 2 - 20);
         }
         for (let i = 0; i < l; i++) {
-            let amp = spectrum[i + start];
+            let amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
             if (lineWeight > 0) {
                 stroke(linecolor);
             }
@@ -159,7 +159,7 @@ function draw() {
 
         for (let i = 0; i < l; i++) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start];
+            let amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
             let height = calY(amp, i);
             let x = (height - lineCircleSize) * cos(angle);
             let y = (height - lineCircleSize) * sin(angle);
@@ -170,7 +170,7 @@ function draw() {
         }
         for (let i = l - 2; i >= 0; i--) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start];
+            let amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
             let height = calY(amp, i);
             let x = (height - lineCircleSize) * cos(angle);
             let y = (height - lineCircleSize) * sin(angle);
@@ -183,7 +183,7 @@ function draw() {
         let max_amp = 0;
         for (let i = 0; i < l; i++) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start];
+            let amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
             let height = calY(amp, i);
             if (max_amp < Math.abs(height)) {
                 max_amp = Math.abs(height);
@@ -197,7 +197,7 @@ function draw() {
         }
         for (let i = l - 2; i >= 0; i--) {
             let angle = map(i, 1, l - 1, 0, 180) - 90;
-            let amp = spectrum[i + start];
+            let amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
             let height = calY(amp, i);
             let x = (height - lineCircleSize) * cos(angle);
             let y = (height - lineCircleSize) * sin(angle);
