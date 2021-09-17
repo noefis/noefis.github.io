@@ -17,78 +17,88 @@ let lineCircleSize;
 let lineCircleShow;
 let alpha;
 
-if (localStorage.getItem('barMultiple') === null) {
-    pow = 9;
-} else {
-    pow = localStorage.getItem('barMultiple');
-}
+function updateSettings() {
 
-if (localStorage.getItem('bcolor') === null) {
-    bcolor = "#000000"
-} else {
-    bcolor = localStorage.getItem('bcolor');
-}
+    if (localStorage.getItem('barMultiple') === null) {
+        pow = 9;
+    } else {
+        pow = localStorage.getItem('barMultiple');
+    }
 
-if (localStorage.getItem('linecolor') === null) {
-    linecolor = "#ffffff"
-} else {
-    linecolor = localStorage.getItem('linecolor');
-}
+    if (localStorage.getItem('bcolor') === null) {
+        bcolor = "#000000"
+    } else {
+        bcolor = localStorage.getItem('bcolor');
+    }
 
-
-if (localStorage.getItem('lineWeight') === null) {
-    lineWeight = 1;
-} else {
-    lineWeight = Number(localStorage.getItem('lineWeight'));
-}
-
-if (localStorage.getItem('barRange') === null) {
-    barRange[0] = 1;
-    barRange[1] = 100;
-} else {
-    barRange[0] = Number(localStorage.getItem('barRange').split(",")[0]);
-    barRange[1] = Number(localStorage.getItem('barRange').split(",")[1]);
-}
-if (barRange[0] === barRange[1]) {
-    barRange[1] = barRange[1] + 1;
-}
-
-if (localStorage.getItem('height') === null) {
-    h = 1;
-} else {
-    h = Number(localStorage.getItem('height')) / 50;
-}
-
-if (localStorage.getItem('vis') === null) {
-    vis = "line";
-} else {
-    vis = localStorage.getItem('vis');
-}
-
-if (localStorage.getItem('lineFill') === null) {
-    lineFill = false;
-} else {
-    lineFill = 'true' === localStorage.getItem('lineFill');
-}
-
-if (localStorage.getItem('showLineCircle') === null) {
-    lineCircleShow = false;
-} else {
-    lineCircleShow = 'true' === localStorage.getItem('showLineCircle');
-}
+    if (localStorage.getItem('linecolor') === null) {
+        linecolor = "#ffffff"
+    } else {
+        linecolor = localStorage.getItem('linecolor');
+    }
 
 
-if (localStorage.getItem('fillcolor') === null) {
-    fillcolor = "#ffffff"
-} else {
-    fillcolor = localStorage.getItem('fillcolor');
+    if (localStorage.getItem('lineWeight') === null) {
+        lineWeight = 1;
+    } else {
+        lineWeight = Number(localStorage.getItem('lineWeight'));
+    }
+
+    if (localStorage.getItem('barRange') === null) {
+        barRange[0] = 1;
+        barRange[1] = 100;
+    } else {
+        barRange[0] = Number(localStorage.getItem('barRange').split(",")[0]);
+        barRange[1] = Number(localStorage.getItem('barRange').split(",")[1]);
+    }
+    if (barRange[0] === barRange[1]) {
+        barRange[1] = barRange[1] + 1;
+    }
+
+    if (localStorage.getItem('height') === null) {
+        h = 1;
+    } else {
+        h = Number(localStorage.getItem('height')) / 50;
+    }
+
+    if (localStorage.getItem('vis') === null) {
+        vis = "line";
+    } else {
+        vis = localStorage.getItem('vis');
+    }
+
+    if (localStorage.getItem('lineFill') === null) {
+        lineFill = false;
+    } else {
+        lineFill = 'true' === localStorage.getItem('lineFill');
+    }
+
+    if (localStorage.getItem('showLineCircle') === null) {
+        lineCircleShow = false;
+    } else {
+        lineCircleShow = 'true' === localStorage.getItem('showLineCircle');
+    }
+
+
+    if (localStorage.getItem('fillcolor') === null) {
+        fillcolor = "#ffffff"
+    } else {
+        fillcolor = localStorage.getItem('fillcolor');
+    }
+
+    if (localStorage.getItem('lineCircleSize') === null) {
+        lineCircleSize = 50;
+    } else {
+        lineCircleSize = Number(localStorage.getItem('lineCircleSize'));
+    }
+
 }
 
-if (localStorage.getItem('lineCircleSize') === null) {
-    lineCircleSize = 50;
-} else {
-    lineCircleSize = Number(localStorage.getItem('lineCircleSize'));
-}
+updateSettings();
+
+window.addEventListener("storage", () => {
+    updateSettings();
+}, false);
 
 
 function setup() {
