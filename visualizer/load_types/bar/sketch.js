@@ -13,6 +13,7 @@ let barRange = [];
 let h;
 let vis;
 let barMargin;
+let clipping;
 
 function updateSettings() {
 
@@ -50,7 +51,7 @@ function updateSettings() {
 
     if (localStorage.getItem('barRange') === null) {
         barRange[0] = 1;
-        barRange[1] = 100;
+        barRange[1] = 50;
     } else {
         barRange[0] = Number(localStorage.getItem('barRange').split(",")[0]);
         barRange[1] = Number(localStorage.getItem('barRange').split(",")[1]);
@@ -63,6 +64,12 @@ function updateSettings() {
         h = 1;
     } else {
         h = Number(localStorage.getItem('height')) / 50;
+    }
+
+    if (localStorage.getItem('clipping') === null) {
+        clipping = 20;
+    } else {
+        clipping = Number(localStorage.getItem('clipping'));
     }
 
     if (localStorage.getItem('vis') === null) {
@@ -113,14 +120,14 @@ function mousePressed() {
 function draw() {
     background(bcolor);
     let spectrum = fft.analyze();
-    let start = Math.floor((spectrum.length / 3) / 100 * barRange[0]);
-    let stop = (spectrum.length / 3) / 100 * barRange[1];
+    let start = Math.floor(spectrum.length / 100 * barRange[0]);
+    let stop = Math.floor(spectrum.length / 100 * barRange[1]);
     let l = stop - start;
 
     noStroke();
     translate(width / 2, height / 2);
     for (let i = 0; i < l; i++) {
-        const amp = spectrum[i + start] * (((pow / 2.6) / (i + 3.5)) + 1);
+        const amp = spectrum[i + start] * h;
         const round = barMargin >= 5 ? -(ww / l * 0.75 - 3) : 0;
         const width = ww / l * 0.75 - 3;
         if (lineWeight > 0) {
@@ -141,7 +148,7 @@ function draw() {
                 doubleBars(amp, l, i, width, round);
                 break;
             case "multiColor":
-                multiColor(amp, l, i);
+                multiColor(amp, l, i, width, round);
                 break;
             case "sidebars":
                 sidebars(amp, l, i, width, round);
@@ -155,54 +162,56 @@ function draw() {
 
 function bars(amp, l, i, width, round) {
     const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
-    const y = -amp * Math.pow(i + 1, 1 / 5) * wh / 456 * h + wh / 2;
-
-
-    rect(x, wh - 20 - wh / 2, width, y > 0 ? round : y + round, barMargin, barMargin, barMargin, barMargin);
+    const y = calHeight(amp, round);
+    rect(x, wh - 20 - wh / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
 
 }
 
 function bar_circle(amp, l, i, width, round) {
 
-    let y = -amp * Math.pow(i + 1, 1 / 5) * wh / 690 * h + wh / 2;
+    const y = calHeight(amp, round) / 3;
 
     rotate(1 / l * 180);
-    rect(-ww / l * 0.9 / 2, wh / 6, width, y > 0 ? -round : -y - round, barMargin, barMargin, barMargin, barMargin);
+    rect(-ww / l * 0.9 / 2, wh / 6, width, y, barMargin, barMargin, barMargin, barMargin);
     rotate(-(1 + i / l * 180) * 2);
-    rect(-ww / l * 0.9 / 2, wh / 6, width, y > 0 ? -round : -y - round, barMargin, barMargin, barMargin, barMargin);
+    rect(-ww / l * 0.9 / 2, wh / 6, width, y, barMargin, barMargin, barMargin, barMargin);
     rotate((1 + i / l * 180) * 2);
 }
 
 function doubleBars(amp, l, i, width, round) {
 
-    let x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
-    let y = -amp * Math.pow(i + 1, 1 / 5) * wh / 456 * h + wh / 2;
+    const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    const y = calHeight(amp, round);
 
-    rect(x,
-        wh / 2 - wh / 2 + y > 0 ? -(round / 2) : -(y / 2 + round / 2),
-        width,
-        y > 0 ? round : y + round,
-        barMargin, barMargin, barMargin, barMargin);
+    rect(x, y / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
 }
 
-function multiColor(amp, l, i) {
+function multiColor(amp, l, i, width, round) {
 
     let x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
-    let y = -amp * Math.pow(i + 1, 1 / 5) * wh / 456 * h + wh / 2;
-    let z = (y > 0 ? 0 : abs(y / wh * 100 % 360));
+    const y = calHeight(amp, round);
+    let z = (-y > 0 ? 0 : abs(-y / wh * 100 % 360));
     let c = color(abs(z - 31 % 360), 100, z);
     stroke(c);
     fill(c);
-    rect(x, wh / 2 - wh / 2, ww / l * 0.9 - 3, y > 0 ? 0 : y / 2, 0, 0, barMargin, barMargin);
-    rect(x, wh / 2 - wh / 2, ww / l * 0.9 - 3, y > 0 ? 0 : -y / 2, 0, 0, barMargin, barMargin);
+    rect(x, y / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
 }
 
 function sidebars(amp, l, i) {
     const round = barMargin >= 5 ? -(wh / l * 0.75 - 3) : 0;
 
     let y = -wh / 2 + (wh / l - 3) / 2 + 6 + i * wh / (l + 1);
-    let x = -amp * Math.pow(i + 1, 1 / 5) * ww / 456 * h + ww / 2;
+    let x = calHeight(amp, round, ww);
 
-    rect(ww / 2 - 3, wh / 2 - y - wh / 2, x > 0 ? round : x / 2 + round, wh / l * 0.75 - 3, 0, barMargin, barMargin, 0);
-    rect(-ww / 2 + 3, wh / 2 - y - wh / 2, x > 0 ? -round : -x / 2 - round, wh / l * 0.75 - 3, 0, barMargin, barMargin, 0);
+    rect(ww / 2 - 3, wh / 2 - y - wh / 2, -x / 2.4, wh / l * 0.75 - 3, 0, barMargin, barMargin, 0);
+    rect(-ww / 2 + 3, wh / 2 - y - wh / 2, x / 2.4, wh / l * 0.75 - 3, 0, barMargin, barMargin, 0);
+}
+
+function calHeight(amp, round = 0, WindowHeight = wh) {
+    let he = amp * WindowHeight / 250 - (clipping / 100 * WindowHeight);
+    if (he > 0) {
+        return he - round;
+    } else {
+        return -round;
+    }
 }
