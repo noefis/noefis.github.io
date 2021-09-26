@@ -18,7 +18,7 @@ if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSo
 }
 if (micOrSound !== "none") {
     if (localStorage.getItem('type') === null) {
-        js.src = `${micOrSound}/bar/sketch.js`;
+        js.src = `${micOrSound}/waveform/sketch.js`;
     } else {
         type = localStorage.getItem('type');
 
