@@ -18,7 +18,7 @@ if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSo
 }
 if (micOrSound !== "none") {
     if (localStorage.getItem('type') === null) {
-        js.src = `${micOrSound}/waveform/sketch.js`;
+        js.src = `${micOrSound}/bar/sketch.js`;
     } else {
         type = localStorage.getItem('type');
 
@@ -28,6 +28,9 @@ if (micOrSound !== "none") {
                 break;
             case "line":
                 js.src = `${micOrSound}/line/sketch.js`;
+                break;
+            case "compareInputs":
+                js.src = `mic_types/inputComparison/sketch.js`;
                 break;
             default:
                 js.src = `${micOrSound}/bar/sketch.js`;

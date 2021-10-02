@@ -77,6 +77,8 @@ function setup() {
         audioIn1.setSource(0);
         audioIn2.setSource(len - 1);
 
+        localStorage.setItem('icw', len + ',' + deviceList[0].label + ',' + deviceList[len - 1].label);
+
         audioIn1.start();
         audioIn2.start();
     });
