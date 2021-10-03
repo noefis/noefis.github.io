@@ -17,6 +17,9 @@ let lineCircleSize;
 let lineCircleShow;
 let clipping;
 
+let fftcopy;
+let fftpause = false;
+
 function updateSettings() {
 
     if (localStorage.getItem('barMultiple') === null) {
@@ -124,15 +127,24 @@ function setup() {
 
 function mousePressed() {
     if (song.isPlaying()) {
+        fftcopy = fft.analyze();
         song.pause();
+        fftpause = true;
     } else {
         song.play();
+        fftpause = false;
     }
 }
 
 function draw() {
     background(bcolor);
-    let spectrum = fft.analyze();
+    let spectrum;
+    if (!fftpause) {
+        spectrum = fft.analyze();
+    } else {
+        spectrum = fftcopy;
+    }
+
     let start = Math.floor(spectrum.length / 100 * barRange[0]);
     let stop = Math.floor(spectrum.length / 100 * barRange[1]);
     let l = Math.floor(stop - start);

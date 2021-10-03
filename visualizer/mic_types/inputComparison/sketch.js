@@ -11,6 +11,10 @@ let barRange = [];
 let pow;
 let lineWeight;
 
+let fftcopy1;
+let fftcopy2;
+let fftpause = false;
+
 function updateSettings() {
 
     if (localStorage.getItem('barMultiple') === null) {
@@ -84,9 +88,33 @@ function setup() {
     });
 }
 
+
+function mousePressed() {
+    if (!fftpause) {
+        fftcopy1 = fft1.analyze();
+        fftcopy2 = fft2.analyze();
+        audioIn1.stop();
+        audioIn2.stop();
+        fftpause = true;
+    } else {
+        audioIn1.start();
+        audioIn2.start();
+        fftpause = false;
+    }
+}
+
 function draw() {
     background(0);
-    let spectrum1 = fft1.analyze();
+    let spectrum1;
+    let spectrum2;
+    if (!fftpause) {
+        spectrum1 = fft1.analyze();
+        spectrum2 = fft2.analyze();
+    } else {
+        spectrum1 = fftcopy1;
+        spectrum2 = fftcopy2;
+    }
+
     let start = Math.floor(spectrum1.length / 100 * barRange[0]);
     let stop = Math.floor(spectrum1.length / 100 * barRange[1]);
     let l = Math.floor(stop - start);
@@ -105,7 +133,6 @@ function draw() {
     }
     endShape();
 
-    let spectrum2 = fft2.analyze();
     smooth();
     beginShape();
     stroke("#FF00AA");
