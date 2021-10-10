@@ -3,39 +3,59 @@ var js = document.createElement("script");
 
 js.type = "text/javascript";
 
-let micOrSound = "mic_types";
+let types = "mic_types";
 
 if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSound') === "sound") {
     var errorP = document.getElementById('errorP');
     if (localStorage.getItem('musicData') !== null) {
-        micOrSound = "load_types";
+        types = "load_types";
         errorP.parentNode.removeChild(errorP);
     } else {
         console.log("p");
         errorP.innerHTML = "Could not load Audio";
-        micOrSound = "none";
+        types = "none";
     }
 }
-if (micOrSound !== "none") {
+
+switch (localStorage.getItem('micOrSound')) {
+    case "mic":
+        types = "mic_types";
+        break;
+    case "sound":
+        types = "load_types";
+        break;
+    case "compareInputs":
+        types = "compareInputs";
+        break;
+    case "toneGenerator":
+        types = "sound_types";
+        break;
+    default:
+        types = "mic_types";
+        break;
+}
+
+if (types !== "none") {
     if (localStorage.getItem('type') === null) {
-        js.src = `${micOrSound}/bar/sketch.js`;
+        type = "bar";
     } else {
         type = localStorage.getItem('type');
-
+    }
+    if (types === "compareInputs") {
+        js.src = `mic_types/inputComparison/sketch.js`;
+    } else {
         switch (type) {
             case "bar":
-                js.src = `${micOrSound}/bar/sketch.js`;
+                js.src = `${types}/bar/sketch.js`;
                 break;
             case "line":
-                js.src = `${micOrSound}/line/sketch.js`;
-                break;
-            case "compareInputs":
-                js.src = `mic_types/inputComparison/sketch.js`;
+                js.src = `${types}/line/sketch.js`;
                 break;
             default:
-                js.src = `${micOrSound}/bar/sketch.js`;
+                js.src = `${types}/bar/sketch.js`;
                 break
         }
+
     }
 }
 
