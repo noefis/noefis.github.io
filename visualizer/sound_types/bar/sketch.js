@@ -6,7 +6,7 @@ let ww = window.innerWidth;
 let wh = window.innerHeight;
 let pow, bcolor, fillcolor, linecolor, lineWeight, barRange = [0, 39], h, vis, barMargin, clipping;
 
-let osc, playing, freq, freq_amp, noise;
+let osc, playing, freq, freq_amp, noise, mouse, osc_started = false;
 
 let isNoisy = true;
 
@@ -89,6 +89,21 @@ function updateSettings() {
         barMargin = Number(localStorage.getItem('barMargin'));
     }
 
+    if (localStorage.getItem('freq') !== null) {
+
+        if (Number(localStorage.getItem('freq')) >= 50 && Number(localStorage.getItem('freq')) < 10000) {
+            if (freq !== Number(localStorage.getItem('freq'))) {
+                freq = Number(localStorage.getItem('freq'));
+                freq_amp = 1;
+                playing = true;
+                mouse = false;
+                if (!osc_started && osc !== undefined) {
+                    osc.start();
+                    osc_started = true;
+                }
+            }
+        }
+    }
 }
 
 updateSettings();
@@ -111,11 +126,6 @@ function setup() {
     fft = new p5.FFT(0.9, Math.pow(2, pow));
 }
 
-function playOscillator() {
-    osc.start();
-    playing = true;
-}
-
 function mousePressed() {
     if (pinkNoise) {
         if (isNoisy) {
@@ -126,7 +136,13 @@ function mousePressed() {
             noise.start();
         }
     } else {
-        playOscillator();
+        if (!osc_started) {
+            osc_started = true;
+            osc.start();
+        }
+        osc.amp(1, 0.1);
+        playing = true;
+        mouse = true;
     }
 }
 
@@ -134,6 +150,7 @@ function mouseReleased() {
     if (!pinkNoise) {
         osc.amp(0, 0.5);
         playing = false;
+        mouse = false;
     }
 }
 
@@ -142,15 +159,15 @@ function draw() {
     background(bcolor);
     if (pinkNoise) {
 
-    } else {
-        freq = constrain(map(mouseX - 12, 0, width, 50, 9410), 50, 9410);
-        freq_amp = constrain(map((wh - mouseY), height, 0, 1, 0), 0, 1);
+    } else if (playing) {
 
-        text('freq: ' + Math.floor(freq) + ' Hz', 20, 20);
-        if (playing) {
-            osc.freq(freq, 0.1);
-            osc.amp(freq_amp, 0.1);
+        if (mouse) {
+            freq = constrain(map(mouseX - 12, 0, width, 50, 9410), 50, 9350);
+            freq_amp = constrain(map((wh - mouseY), height, 0, 1, 0), 0, 1);
         }
+        text('freq: ' + Math.floor(freq) + ' Hz', 20, 20);
+        osc.freq(freq, 0.1);
+        osc.amp(freq_amp, 0.1);
     }
 
     let spectrum = fft.analyze();
