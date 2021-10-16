@@ -131,7 +131,6 @@ function setup() {
     createCanvas(ww, wh);
     osc = new p5.Oscillator('sine');
     noise = new p5.Noise("pink");
-    console.log(pinkNoise);
     if (pinkNoise) {
         noise.amp(1);
         noise.start();
