@@ -6,7 +6,7 @@ let ww = window.innerWidth;
 let wh = window.innerHeight;
 let pow, bcolor, fillcolor, linecolor, lineWeight, barRange = [0, 39], h, vis, barMargin, clipping;
 
-let osc, playing, freq, freq_amp, noise, mouse, osc_started = false, mouse_osc = false;
+let osc, playing, freq, old_freq, freq_amp, noise, mouse, osc_started = false, mouse_osc = false;
 
 let isNoisy = true;
 
@@ -92,7 +92,8 @@ function updateSettings() {
     if (localStorage.getItem('freq') !== null) {
 
         if (Number(localStorage.getItem('freq')) >= 50 && Number(localStorage.getItem('freq')) < 10000) {
-            if (freq !== Number(localStorage.getItem('freq'))) {
+            if (old_freq !== Number(localStorage.getItem('freq'))) {
+                old_freq = Number(localStorage.getItem('freq'));
                 freq = Number(localStorage.getItem('freq'));
                 freq_amp = 1;
                 playing = true;
