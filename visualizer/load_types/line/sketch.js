@@ -119,6 +119,12 @@ function preload() {
 
 function setup() {
     createCanvas(ww, wh);
+    window.addEventListener('resize', () => {
+        ww = window.innerWidth;
+        wh = window.innerHeight;
+        resizeCanvas(window.innerWidth, window.innerHeight);
+    });
+
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);

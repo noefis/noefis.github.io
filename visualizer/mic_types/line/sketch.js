@@ -113,6 +113,11 @@ window.addEventListener("storage", () => {
 
 function setup() {
     createCanvas(ww, wh);
+    window.addEventListener('resize', () => {
+        ww = window.innerWidth;
+        wh = window.innerHeight;
+        resizeCanvas(window.innerWidth, window.innerHeight);
+    });
 
     mic = new p5.AudioIn();
     mic.start();

@@ -130,6 +130,12 @@ window.addEventListener("storage", () => {
 
 function setup() {
     createCanvas(ww, wh);
+    window.addEventListener('resize', () => {
+        ww = window.innerWidth;
+        wh = window.innerHeight;
+        resizeCanvas(window.innerWidth, window.innerHeight);
+    });
+
     osc = new p5.Oscillator('sine');
     noise = new p5.Noise("pink");
     if (pinkNoise) {
