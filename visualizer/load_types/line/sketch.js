@@ -174,6 +174,11 @@ function draw() {
             }
             let x = calX(l, i);
             let y = calHeight(amp);
+            if (lineFill && i > 0 && i < l - 1) {
+                if ((calHeight(spectrum[i - 1 + start] * h) > 20 || calHeight(spectrum[i + 1 + start] * h) > 20) && y < 10) {
+                    y = 10;
+                }
+            }
             curveVertex(x, -y + wh / 2 - 20);
         }
         if (lineFill) {
