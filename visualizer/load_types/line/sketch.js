@@ -16,6 +16,8 @@ let fillcolor;
 let lineCircleSize;
 let lineCircleShow;
 let clipping;
+let audio;
+let link;
 
 let fftcopy;
 let fftpause = false;
@@ -101,6 +103,17 @@ function updateSettings() {
         lineCircleSize = Number(localStorage.getItem('lineCircleSize'));
     }
 
+    if (localStorage.getItem('barMargin') === null) {
+        barMargin = 5;
+    } else {
+        barMargin = Number(localStorage.getItem('barMargin'));
+    }
+
+    if (localStorage.getItem('ytlink') === null) {
+        audio = localStorage.getItem('musicData');
+    } else {
+        audio = localStorage.getItem('ytlink');
+    }
 }
 
 updateSettings();
@@ -111,10 +124,22 @@ window.addEventListener("storage", () => {
 
 
 let song;
-const audio = localStorage.getItem('musicData');
 
 function preload() {
-    song = loadSound(audio);
+    song = loadSound(audio, removeLoadingPercent(), removeLoadingPercent(), whileLoading);
+}
+
+function whileLoading(total) {
+    let percent = Math.floor(total * 100 + 1);
+    if (percent < 100) {
+        localStorage.setItem("percentLoaded", percent.toString());
+    } else {
+        localStorage.removeItem("percentLoaded");
+    }
+}
+
+function removeLoadingPercent() {
+    localStorage.removeItem("percentLoaded");
 }
 
 function setup() {
@@ -124,7 +149,6 @@ function setup() {
         wh = window.innerHeight;
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
-
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);

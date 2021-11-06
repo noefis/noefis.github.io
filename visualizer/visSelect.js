@@ -6,15 +6,7 @@ js.type = "text/javascript";
 let types = "mic_types";
 
 if (localStorage.getItem('micOrSound') !== null && localStorage.getItem('micOrSound') === "sound") {
-    var errorP = document.getElementById('errorP');
-    if (localStorage.getItem('musicData') !== null) {
-        types = "load_types";
-        errorP.parentNode.removeChild(errorP);
-    } else {
-        console.log("p");
-        errorP.innerHTML = "Could not load Audio";
-        types = "none";
-    }
+    types = "load_types";
 }
 
 switch (localStorage.getItem('micOrSound')) {
