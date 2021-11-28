@@ -18,9 +18,15 @@ let lineCircleShow;
 let clipping;
 let audio;
 let link;
+let s;
+let changeTime = 0;
 
 let fftcopy;
 let fftpause = false;
+
+let song;
+
+let capturer = new CCapture({format: 'png'});
 
 function updateSettings() {
 
@@ -114,6 +120,11 @@ function updateSettings() {
     } else {
         audio = localStorage.getItem('ytlink');
     }
+
+    if (localStorage.getItem('changeTime') !== null) {
+        changeTime = localStorage.getItem('changeTime');
+        localStorage.removeItem('changeTime');
+    }
 }
 
 updateSettings();
@@ -121,9 +132,6 @@ updateSettings();
 window.addEventListener("storage", () => {
     updateSettings();
 }, false);
-
-
-let song;
 
 function preload() {
     song = loadSound(audio, removeLoadingPercent(), removeLoadingPercent(), whileLoading);
@@ -149,10 +157,37 @@ function setup() {
         wh = window.innerHeight;
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
+
+    window.addEventListener("storage", () => {
+        if (localStorage.getItem('record') === "true") {
+            localStorage.removeItem('record');
+            if (localStorage.getItem('startOnZero') === "true") {
+                song.jump(0);
+                song.stop();
+                setTimeout(() => {
+                    song.play();
+                    setTimeout(() => {
+                        capturer.start();
+                        capturer.capture(document.getElementById('defaultCanvas0'));
+                    }, 330);
+                }, 2700);
+
+            } else {
+                capturer.start();
+                capturer.capture(document.getElementById('defaultCanvas0'));
+            }
+        }
+        if (localStorage.getItem('record') === "false") {
+            localStorage.removeItem('record');
+            capturer.stop();
+            capturer.save();
+        }
+    }, false);
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);
     fft = new p5.FFT(0.9, Math.pow(2, pow));
+    localStorage.setItem("duration", song.duration());
 }
 
 function mousePressed() {
@@ -168,6 +203,17 @@ function mousePressed() {
 
 function draw() {
     background(bcolor);
+    if (Math.floor(millis() / 500) !== s) {
+        s = Math.floor(millis() / 500);
+        localStorage.setItem("currentTime", song.currentTime());
+    }
+    if (changeTime !== 0) {
+        if (changeTime < song.duration()) {
+            song.jump(changeTime);
+        }
+        changeTime = 0;
+    }
+
     let spectrum;
     if (!fftpause) {
         spectrum = fft.analyze();
@@ -265,7 +311,6 @@ function draw() {
         alpha = z / 2 - 10 < 0 ? 0 : z / 2 - 10;
         lc = color(linecolor);
         lc.setAlpha(alpha);
-        console.log(alpha);
         if (lineWeight > 0) {
             stroke(lc);
         }
@@ -280,6 +325,8 @@ function draw() {
         }
         circle(0, 0, lineCircleSize * 2);
     }
+
+    capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
 function calX(l, i) {

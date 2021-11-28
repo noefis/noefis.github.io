@@ -15,6 +15,8 @@ let fftcopy1;
 let fftcopy2;
 let fftpause = false;
 
+let capturer = new CCapture({format: 'png'});
+
 function updateSettings() {
 
     if (localStorage.getItem('barMultiple') === null) {
@@ -70,6 +72,18 @@ function setup() {
         wh = window.innerHeight;
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
+    window.addEventListener("storage", () => {
+        if (localStorage.getItem('record') === "true") {
+            localStorage.removeItem('record');
+            capturer.start();
+            capturer.capture(document.getElementById('defaultCanvas0'));
+        }
+        if (localStorage.getItem('record') === "false") {
+            localStorage.removeItem('record');
+            capturer.stop();
+            capturer.save();
+        }
+    }, false);
 
     colorMode(HSB);
 
@@ -150,6 +164,7 @@ function draw() {
     }
     endShape();
 
+    capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
 function calX(l, i) {

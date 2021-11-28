@@ -18,6 +18,8 @@ let clipping;
 let fftcopy;
 let fftpause = false;
 
+let capturer = new CCapture({format: 'png'});
+
 function updateSettings() {
 
     if (localStorage.getItem('barMultiple') === null) {
@@ -102,6 +104,18 @@ function setup() {
         wh = window.innerHeight;
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
+    window.addEventListener("storage", () => {
+        if (localStorage.getItem('record') === "true") {
+            localStorage.removeItem('record');
+            capturer.start();
+            capturer.capture(document.getElementById('defaultCanvas0'));
+        }
+        if (localStorage.getItem('record') === "false") {
+            localStorage.removeItem('record');
+            capturer.stop();
+            capturer.save();
+        }
+    }, false);
 
     mic = new p5.AudioIn();
     mic.start();
@@ -169,6 +183,8 @@ function draw() {
                 break;
         }
     }
+
+    capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
 function bars(amp, l, i, width, round) {

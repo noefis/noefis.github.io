@@ -12,6 +12,8 @@ let isNoisy = true;
 
 let pinkNoise;
 
+let capturer = new CCapture({format: 'png'});
+
 function updateSettings() {
 
     if (localStorage.getItem('pinkNoise') === null) {
@@ -120,6 +122,18 @@ function setup() {
         wh = window.innerHeight;
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
+    window.addEventListener("storage", () => {
+        if (localStorage.getItem('record') === "true") {
+            localStorage.removeItem('record');
+            capturer.start();
+            capturer.capture(document.getElementById('defaultCanvas0'));
+        }
+        if (localStorage.getItem('record') === "false") {
+            localStorage.removeItem('record');
+            capturer.stop();
+            capturer.save();
+        }
+    }, false);
 
     osc = new p5.Oscillator('sine');
     noise = new p5.Noise("pink");
@@ -218,6 +232,8 @@ function draw() {
                 break;
         }
     }
+
+    capturer.capture(document.getElementById('defaultCanvas0'));
 }
 
 function bars(amp, l, i, width, round) {
