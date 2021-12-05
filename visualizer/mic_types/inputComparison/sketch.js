@@ -11,6 +11,8 @@ let barRange = [];
 let pow;
 let lineWeight;
 
+let attack = 0.9;
+
 let fftcopy1;
 let fftcopy2;
 let fftpause = false;
@@ -19,13 +21,20 @@ let capturer;
 
 let recording = false;
 
-function updateSettings() {
 
-    if (localStorage.getItem('barMultiple') === null) {
-        pow = 11;
-    } else {
-        pow = localStorage.getItem('barMultiple');
-    }
+if (localStorage.getItem('barMultiple') === null) {
+    pow = 9;
+} else {
+    pow = localStorage.getItem('barMultiple');
+}
+
+if (localStorage.getItem('attack') === null) {
+    attack = 0.9;
+} else {
+    attack = localStorage.getItem('attack');
+}
+
+function updateSettings() {
 
     if (localStorage.getItem('height') === null) {
         h = 1;
@@ -75,17 +84,27 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
+        if (Number(localStorage.getItem('attack')) !== attack) {
+            attack = Number(localStorage.getItem('attack'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
+        }
+        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+            pow = Number(localStorage.getItem('barMultiple'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
+        }
         record();
     }, false);
 
     colorMode(HSB);
 
     audioIn1 = new p5.AudioIn();
-    fft1 = new p5.FFT(0.9, Math.pow(2, pow));
+    fft1 = new p5.FFT(attack, Math.pow(2, pow));
     fft1.setInput(audioIn1);
 
     audioIn2 = new p5.AudioIn();
-    fft2 = new p5.FFT(0.9, Math.pow(2, pow));
+    fft2 = new p5.FFT(attack, Math.pow(2, pow));
     fft2.setInput(audioIn2);
 
     audioIn1.getSources().then(deviceList => {

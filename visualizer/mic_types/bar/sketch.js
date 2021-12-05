@@ -15,6 +15,8 @@ let vis;
 let barMargin;
 let clipping;
 
+let attack = 0.9;
+
 let fftcopy;
 let fftpause = false;
 
@@ -22,13 +24,20 @@ let capturer;
 
 let recording = false;
 
-function updateSettings() {
 
-    if (localStorage.getItem('barMultiple') === null) {
-        pow = 9;
-    } else {
-        pow = localStorage.getItem('barMultiple');
-    }
+if (localStorage.getItem('barMultiple') === null) {
+    pow = 9;
+} else {
+    pow = localStorage.getItem('barMultiple');
+}
+
+if (localStorage.getItem('attack') === null) {
+    attack = 0.9;
+} else {
+    attack = localStorage.getItem('attack');
+}
+
+function updateSettings() {
 
     if (localStorage.getItem('bcolor') === null) {
         bcolor = "#000000"
@@ -107,6 +116,16 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
+        if (Number(localStorage.getItem('attack')) !== attack) {
+            attack = Number(localStorage.getItem('attack'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
+        }
+        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+            pow = Number(localStorage.getItem('barMultiple'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
+        }
         record();
     }, false);
 
@@ -114,7 +133,7 @@ function setup() {
     mic.start();
     angleMode(DEGREES);
     colorMode(HSB);
-    fft = new p5.FFT(0.9, Math.pow(2, pow));
+    fft = new p5.FFT(attack, Math.pow(2, pow));
     fft.setInput(mic);
 }
 
@@ -220,7 +239,7 @@ function draw() {
 }
 
 function bars(amp, l, i, width, round) {
-    const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    const x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
     rect(x, wh - 20 - wh / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
 
@@ -239,7 +258,7 @@ function bar_circle(amp, l, i, width, round) {
 
 function doubleBars(amp, l, i, width, round) {
 
-    const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    const x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
 
     rect(x, y / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
@@ -247,7 +266,7 @@ function doubleBars(amp, l, i, width, round) {
 
 function multiColor(amp, l, i, width, round) {
 
-    let x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    let x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
     let z = (-y > 0 ? 0 : abs(-y / wh * 100 % 360));
     let c = color(abs(z - 31 % 360), 100, z);
@@ -259,7 +278,7 @@ function multiColor(amp, l, i, width, round) {
 function sidebars(amp, l, i) {
     const round = barMargin >= 5 ? -(wh / l * 0.75 - 3) : 0;
 
-    let y = -wh / 2 + (wh / l - 3) / 2 + 6 + i * wh / (l + 1);
+    let y = (wh / l * 0.75 - 3) + -wh / 2 + (wh / l - 3) / 2 + 6 + i * wh / (l + 1);
     let x = calHeight(amp, round, ww);
 
     rect(ww / 2 - 3, wh / 2 - y - wh / 2, -x / 2.4, wh / l * 0.75 - 3, 0, barMargin, barMargin, 0);

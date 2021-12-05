@@ -9,6 +9,8 @@ let pow, bcolor, fillcolor, linecolor, lineWeight, barRange = [0, 39], h, vis, l
 
 let osc, playing, freq, old_freq, freq_amp, noise, mouse, osc_started = false, mouse_osc = false;
 
+let attack = 0.9;
+
 let isNoisy = true;
 
 let pinkNoise;
@@ -16,6 +18,18 @@ let pinkNoise;
 let capturer;
 
 let recording = false;
+
+if (localStorage.getItem('barMultiple') === null) {
+    pow = 9;
+} else {
+    pow = localStorage.getItem('barMultiple');
+}
+
+if (localStorage.getItem('attack') === null) {
+    attack = 0.9;
+} else {
+    attack = localStorage.getItem('attack');
+}
 
 function updateSettings() {
 
@@ -38,12 +52,6 @@ function updateSettings() {
         }
     }
 
-
-    if (localStorage.getItem('barMultiple') === null) {
-        pow = 9;
-    } else {
-        pow = localStorage.getItem('barMultiple');
-    }
 
     if (localStorage.getItem('bcolor') === null) {
         bcolor = "#000000"
@@ -140,6 +148,14 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
+        if (Number(localStorage.getItem('attack')) !== attack) {
+            attack = Number(localStorage.getItem('attack'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
+        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+            pow = Number(localStorage.getItem('barMultiple'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
         record();
     }, false);
 
@@ -151,7 +167,7 @@ function setup() {
     }
     angleMode(DEGREES);
     colorMode(HSB);
-    fft = new p5.FFT(0.9, Math.pow(2, pow));
+    fft = new p5.FFT(attack, Math.pow(2, pow));
 }
 
 function mousePressed() {

@@ -21,6 +21,8 @@ let link;
 let s;
 let changeTime = 0;
 
+let attack = 0.9;
+
 let fftcopy;
 let fftpause = false;
 
@@ -30,13 +32,20 @@ let capturer;
 
 let recording = false;
 
-function updateSettings() {
 
-    if (localStorage.getItem('barMultiple') === null) {
-        pow = 9;
-    } else {
-        pow = localStorage.getItem('barMultiple');
-    }
+if (localStorage.getItem('barMultiple') === null) {
+    pow = 9;
+} else {
+    pow = localStorage.getItem('barMultiple');
+}
+
+if (localStorage.getItem('attack') === null) {
+    attack = 0.9;
+} else {
+    attack = localStorage.getItem('attack');
+}
+
+function updateSettings() {
 
     if (localStorage.getItem('bcolor') === null) {
         bcolor = "#000000"
@@ -161,12 +170,20 @@ function setup() {
     });
 
     window.addEventListener("storage", () => {
+        if (Number(localStorage.getItem('attack')) !== attack) {
+            attack = Number(localStorage.getItem('attack'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
+        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+            pow = Number(localStorage.getItem('barMultiple'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
         record();
     }, false);
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);
-    fft = new p5.FFT(0.9, Math.pow(2, pow));
+    fft = new p5.FFT(attack, Math.pow(2, pow));
     localStorage.setItem("duration", song.duration());
 }
 

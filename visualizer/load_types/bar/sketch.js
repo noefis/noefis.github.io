@@ -19,6 +19,8 @@ let link;
 let s;
 let changeTime = 0;
 
+let attack = 0.9;
+
 let fftcopy;
 let fftpause = false;
 
@@ -28,13 +30,20 @@ let capturer;
 
 let recording = false;
 
-function updateSettings() {
 
-    if (localStorage.getItem('barMultiple') === null) {
-        pow = 9;
-    } else {
-        pow = localStorage.getItem('barMultiple');
-    }
+if (localStorage.getItem('barMultiple') === null) {
+    pow = 9;
+} else {
+    pow = localStorage.getItem('barMultiple');
+}
+
+if (localStorage.getItem('attack') === null) {
+    attack = 0.9;
+} else {
+    attack = localStorage.getItem('attack');
+}
+
+function updateSettings() {
 
     if (localStorage.getItem('bcolor') === null) {
         bcolor = "#000000"
@@ -142,12 +151,20 @@ function setup() {
     });
 
     window.addEventListener("storage", () => {
+        if (Number(localStorage.getItem('attack')) !== attack) {
+            attack = Number(localStorage.getItem('attack'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
+        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+            pow = Number(localStorage.getItem('barMultiple'));
+            fft = new p5.FFT(attack, Math.pow(2, pow));
+        }
         record()
     }, false);
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);
-    fft = new p5.FFT(0.9, Math.pow(2, pow));
+    fft = new p5.FFT(attack, Math.pow(2, pow));
     localStorage.setItem("duration", song.duration());
 }
 
@@ -277,7 +294,7 @@ function draw() {
 }
 
 function bars(amp, l, i, width, round) {
-    const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    const x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
     rect(x, wh - 20 - wh / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
 
@@ -296,7 +313,7 @@ function bar_circle(amp, l, i, width, round) {
 
 function doubleBars(amp, l, i, width, round) {
 
-    const x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    const x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
 
     rect(x, y / 2, width, -y, barMargin, barMargin, barMargin, barMargin);
@@ -304,7 +321,7 @@ function doubleBars(amp, l, i, width, round) {
 
 function multiColor(amp, l, i, width, round) {
 
-    let x = -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
+    let x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
     let z = (-y > 0 ? 0 : abs(-y / wh * 100 % 360));
     let c = color(abs(z - 31 % 360), 100, z);
