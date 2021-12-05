@@ -12,7 +12,9 @@ let isNoisy = true;
 
 let pinkNoise;
 
-let capturer = new CCapture({format: 'png'});
+let capturer;
+
+let recording = false;
 
 function updateSettings() {
 
@@ -123,16 +125,7 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
-        if (localStorage.getItem('record') === "true") {
-            localStorage.removeItem('record');
-            capturer.start();
-            capturer.capture(document.getElementById('defaultCanvas0'));
-        }
-        if (localStorage.getItem('record') === "false") {
-            localStorage.removeItem('record');
-            capturer.stop();
-            capturer.save();
-        }
+        record();
     }, false);
 
     osc = new p5.Oscillator('sine');
@@ -168,6 +161,29 @@ function mousePressed() {
     }
 }
 
+function record() {
+    if (localStorage.getItem('record') === "png" && recording === false) {
+        recording = true;
+        capturer = new CCapture({format: 'png'});
+        localStorage.removeItem('record');
+        capturer.start();
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
+    if (localStorage.getItem('record') === "webm" && recording === false) {
+        recording = true;
+        capturer = new CCapture({format: 'webm-mediarecorder'});
+        localStorage.removeItem('record');
+        capturer.start();
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
+    if (localStorage.getItem('record') === "false" && recording === true) {
+        recording = false;
+        localStorage.removeItem('record');
+        capturer.stop();
+        capturer.save();
+    }
+}
+
 function mouseReleased() {
     if (!pinkNoise) {
         osc.amp(0, 0.5);
@@ -176,6 +192,20 @@ function mouseReleased() {
     }
 }
 
+function keyPressed() {
+    if (keyCode === 80) {
+        localStorage.setItem('record', 'png');
+        record();
+    }
+    if (keyCode === 87) {
+        localStorage.setItem('record', 'webm');
+        record();
+    }
+    if (keyCode === 83) {
+        localStorage.setItem('record', 'false');
+        record();
+    }
+}
 
 function draw() {
     background(bcolor);
@@ -233,7 +263,9 @@ function draw() {
         }
     }
 
-    capturer.capture(document.getElementById('defaultCanvas0'));
+    if (capturer !== undefined) {
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
 }
 
 function bars(amp, l, i, width, round) {

@@ -24,7 +24,9 @@ let fftpause = false;
 
 let song;
 
-let capturer = new CCapture({format: 'png'});
+let capturer;
+
+let recording = false;
 
 function updateSettings() {
 
@@ -140,35 +142,47 @@ function setup() {
     });
 
     window.addEventListener("storage", () => {
-        if (localStorage.getItem('record') === "true") {
-            localStorage.removeItem('record');
-            if (localStorage.getItem('startOnZero') === "true") {
-                song.jump(0);
-                song.stop();
-                setTimeout(() => {
-                    song.play();
-                    setTimeout(() => {
-                        capturer.start();
-                        capturer.capture(document.getElementById('defaultCanvas0'));
-                    }, 330);
-                }, 2700);
-
-            } else {
-                capturer.start();
-                capturer.capture(document.getElementById('defaultCanvas0'));
-            }
-        }
-        if (localStorage.getItem('record') === "false") {
-            localStorage.removeItem('record');
-            capturer.stop();
-            capturer.save();
-        }
+        record()
     }, false);
     song.play();
     angleMode(DEGREES);
     colorMode(HSB);
     fft = new p5.FFT(0.9, Math.pow(2, pow));
     localStorage.setItem("duration", song.duration());
+}
+
+function record() {
+    if ((localStorage.getItem('record') === "png" || localStorage.getItem('record') === "webm") && recording === false) {
+        recording = true;
+        if (localStorage.getItem('record') === "png") {
+            capturer = new CCapture({format: 'png'});
+        }
+        if (localStorage.getItem('record') === "webm") {
+            capturer = new CCapture({format: 'webm-mediarecorder'});
+        }
+        localStorage.removeItem('record');
+        if (localStorage.getItem('startOnZero') === "true") {
+            song.jump(0);
+            song.stop();
+            setTimeout(() => {
+                song.play();
+                setTimeout(() => {
+                    capturer.start();
+                    capturer.capture(document.getElementById('defaultCanvas0'));
+                }, 330);
+            }, 2700);
+
+        } else {
+            capturer.start();
+            capturer.capture(document.getElementById('defaultCanvas0'));
+        }
+    }
+    if (localStorage.getItem('record') === "false" && recording) {
+        recording = false;
+        localStorage.removeItem('record');
+        capturer.stop();
+        capturer.save();
+    }
 }
 
 
@@ -180,6 +194,21 @@ function mousePressed() {
     } else {
         song.play();
         fftpause = false;
+    }
+}
+
+function keyPressed() {
+    if (keyCode === 80) {
+        localStorage.setItem('record', 'png');
+        record();
+    }
+    if (keyCode === 87) {
+        localStorage.setItem('record', 'webm');
+        record();
+    }
+    if (keyCode === 83) {
+        localStorage.setItem('record', 'false');
+        record();
     }
 }
 
@@ -242,7 +271,9 @@ function draw() {
         }
     }
 
-    capturer.capture(document.getElementById('defaultCanvas0'));
+    if (capturer !== undefined) {
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
 }
 
 function bars(amp, l, i, width, round) {

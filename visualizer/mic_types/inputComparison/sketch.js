@@ -15,7 +15,9 @@ let fftcopy1;
 let fftcopy2;
 let fftpause = false;
 
-let capturer = new CCapture({format: 'png'});
+let capturer;
+
+let recording = false;
 
 function updateSettings() {
 
@@ -73,16 +75,7 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
-        if (localStorage.getItem('record') === "true") {
-            localStorage.removeItem('record');
-            capturer.start();
-            capturer.capture(document.getElementById('defaultCanvas0'));
-        }
-        if (localStorage.getItem('record') === "false") {
-            localStorage.removeItem('record');
-            capturer.stop();
-            capturer.save();
-        }
+        record();
     }, false);
 
     colorMode(HSB);
@@ -108,6 +101,28 @@ function setup() {
     });
 }
 
+function record() {
+    if (localStorage.getItem('record') === "png" && recording === false) {
+        recording = true;
+        capturer = new CCapture({format: 'png'});
+        localStorage.removeItem('record');
+        capturer.start();
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
+    if (localStorage.getItem('record') === "webm" && recording === false) {
+        recording = true;
+        capturer = new CCapture({format: 'webm-mediarecorder'});
+        localStorage.removeItem('record');
+        capturer.start();
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
+    if (localStorage.getItem('record') === "false" && recording === true) {
+        recording = false;
+        localStorage.removeItem('record');
+        capturer.stop();
+        capturer.save();
+    }
+}
 
 function mousePressed() {
     if (!fftpause) {
@@ -120,6 +135,21 @@ function mousePressed() {
         audioIn1.start();
         audioIn2.start();
         fftpause = false;
+    }
+}
+
+function keyPressed() {
+    if (keyCode === 80) {
+        localStorage.setItem('record', 'png');
+        record();
+    }
+    if (keyCode === 87) {
+        localStorage.setItem('record', 'webm');
+        record();
+    }
+    if (keyCode === 83) {
+        localStorage.setItem('record', 'false');
+        record();
     }
 }
 
@@ -164,7 +194,9 @@ function draw() {
     }
     endShape();
 
-    capturer.capture(document.getElementById('defaultCanvas0'));
+    if (capturer !== undefined) {
+        capturer.capture(document.getElementById('defaultCanvas0'));
+    }
 }
 
 function calX(l, i) {
