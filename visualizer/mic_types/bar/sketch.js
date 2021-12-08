@@ -288,8 +288,8 @@ function sidebars(amp, l, i) {
 function calHeight(amp, round = 0, WindowHeight = wh) {
     let he = amp * WindowHeight / 250 - (clipping / 100 * WindowHeight);
     if (he > 0) {
-        return he - round;
+        return he - round < 0 ? 0 : he - round;
     } else {
-        return -round;
+        return -round < 0 ? 0 : -round;
     }
 }
