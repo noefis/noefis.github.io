@@ -73,7 +73,7 @@ function updateSettings() {
 
     if (localStorage.getItem('barRange') === null) {
         barRange[0] = 1;
-        barRange[1] = 50;
+        barRange[1] = 10;
     } else {
         barRange[0] = Number(localStorage.getItem('barRange').split(",")[0]);
         barRange[1] = Number(localStorage.getItem('barRange').split(",")[1]);
@@ -251,7 +251,7 @@ function draw() {
 
     let start = Math.floor(spectrum.length / 100 * barRange[0]);
     let stop = Math.floor(spectrum.length / 100 * barRange[1]);
-    let l = stop - start;
+    let l = Math.max(Math.floor(stop - start), 3);
 
     noStroke();
     translate(width / 2, height / 2);
@@ -341,10 +341,11 @@ function sidebars(amp, l, i) {
 }
 
 function calHeight(amp, round = 0, WindowHeight = wh) {
+    round = -round > WindowHeight / 2 ? -(WindowHeight / 2) : round;
     let he = amp * WindowHeight / 250 - (clipping / 100 * WindowHeight);
-    if (he > 0) {
-        return he - round < 0 ? 0 : he - round;
+    if (he > -round) {
+        return he;
     } else {
-        return -round < 0 ? 0 : -round;
+        return -round;
     }
 }

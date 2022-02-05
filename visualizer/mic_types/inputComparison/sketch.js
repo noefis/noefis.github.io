@@ -50,7 +50,7 @@ function updateSettings() {
 
     if (localStorage.getItem('barRange') === null) {
         barRange[0] = 1;
-        barRange[1] = 50;
+        barRange[1] = 10;
     } else {
         barRange[0] = Number(localStorage.getItem('barRange').split(",")[0]);
         barRange[1] = Number(localStorage.getItem('barRange').split(",")[1]);
@@ -186,7 +186,7 @@ function draw() {
 
     let start = Math.floor(spectrum1.length / 100 * barRange[0]);
     let stop = Math.floor(spectrum1.length / 100 * barRange[1]);
-    let l = Math.floor(stop - start);
+    let l = Math.max(Math.floor(stop - start), 4);
 
     translate(width / 2, height / 2);
 
