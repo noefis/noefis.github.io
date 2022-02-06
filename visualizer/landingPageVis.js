@@ -34,7 +34,7 @@ function setup() {
 
 
 function draw() {
-    background("#17171d");
+    background("#0f0e0e");
 
     noStroke();
     translate(width / 2, height / 2);
@@ -52,7 +52,7 @@ function multiColor(amp, l, i, width, round) {
 
     let x = width / 2 + -ww / 2 + (wh / l - 3) / 2 + 6 + i * ww / (l + 1);
     const y = calHeight(amp, round);
-    let z = (-y > 0 ? 0 : abs(-y / wh * 100 % 360));
+    let z = (-y > 0 ? 0 : abs(-(y - 40) / wh * 100 % 360));
     let c = color(abs(z - 31 % 360), 100, z);
     stroke(c);
     fill(c);
@@ -60,7 +60,7 @@ function multiColor(amp, l, i, width, round) {
 }
 
 function calHeight(amp, round = 0, WindowHeight = wh) {
-    let he = amp * (WindowHeight / 250)/ Math.max(1,(ww/1000));
+    let he = amp * (WindowHeight / 250) / Math.max(1, (ww / 1000));
     if (he > 0) {
         return he - round < 0 ? 0 : he - round;
     } else {
