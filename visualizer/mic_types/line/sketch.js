@@ -79,7 +79,7 @@ function updateSettings() {
     }
 
     if (localStorage.getItem('clipping') === null) {
-        clipping = 20;
+        clipping = 100;
     } else {
         clipping = Number(localStorage.getItem('clipping'));
     }
@@ -132,11 +132,11 @@ function setup() {
         resizeCanvas(window.innerWidth, window.innerHeight);
     });
     window.addEventListener("storage", () => {
-        if (Number(localStorage.getItem('attack')) !== attack) {
+        if (Number(localStorage.getItem('attack')) !== attack && localStorage.getItem('attack') !== null) {
             attack = Number(localStorage.getItem('attack'));
             fft = new p5.FFT(attack, Math.pow(2, pow));
         }
-        if (Number(localStorage.getItem('barMultiple')) !== pow) {
+        if (Number(localStorage.getItem('barMultiple')) !== pow && localStorage.getItem('barMultiple') !== null) {
             pow = Number(localStorage.getItem('barMultiple'));
             fft = new p5.FFT(attack, Math.pow(2, pow));
         }
