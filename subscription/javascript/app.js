@@ -35,7 +35,7 @@ const firebaseUiConfig = {
     },
   },
   signInFlow: 'popup',
-  signInSuccessUrl: '/subscription',
+  signInSuccessUrl: '/subscription/index.html',
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
@@ -66,7 +66,7 @@ function startDataListeners() {
   const products = document.querySelector('.products');
   const template = document.querySelector('#product');
   db.collection('products')
-    .where('active', '==', true)
+  .where('active', '==', true)
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(async function (doc) {
@@ -205,7 +205,7 @@ document
   .querySelector('#billing-portal-button')
   .addEventListener('click', async (event) => {
     document.querySelectorAll('button').forEach((b) => (b.disabled = true));
-
+    
     // Call billing portal function
     const functionRef = firebase
       .app()
