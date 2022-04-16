@@ -53,7 +53,7 @@ firebase.auth().onAuthStateChanged((firebaseUser) => {
     currentUser = firebaseUser.uid;
     startDataListeners();
   } else {
-    document.querySelector('main').style.display = 'none';
+    document.getElementById('signout').style.display = 'none';
     firebaseUI.start('#firebaseui-auth-container', firebaseUiConfig);
   }
 });
@@ -66,7 +66,7 @@ function startDataListeners() {
   const products = document.querySelector('.products');
   const template = document.querySelector('#product');
   db.collection('products')
-  .where('active', '==', true)
+    .where('active', '==', true)
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(async function (doc) {
@@ -149,7 +149,13 @@ function startDataListeners() {
 // Signout button
 document
   .getElementById('signout')
-  .addEventListener('click', () => firebase.auth().signOut());
+  .addEventListener('click', () => {
+    firebase.auth().signOut();
+    localStorage.removeItem('user');
+    localStorage.removeItem('u_picture');
+    localStorage.removeItem('u_role');
+    location.reload();
+  });
 
 // Checkout handler
 async function subscribe(event) {
@@ -205,12 +211,12 @@ document
   .querySelector('#billing-portal-button')
   .addEventListener('click', async (event) => {
     document.querySelectorAll('button').forEach((b) => (b.disabled = true));
-    
+
     // Call billing portal function
     const functionRef = firebase
       .app()
       .functions(functionLocation)
-      .httpsCallable('ext-firestore-stripe-subscriptions-createPortalLink');
+      .httpsCallable('ext-firestore-stripe-payments-createPortalLink');
     const { data } = await functionRef({ returnUrl: window.location.origin });
     window.location.assign(data.url);
   });

@@ -8,13 +8,47 @@
 </head>
 
 <body>
-    <section id="firebaseui-auth-container">
-        <div id="loader">Loading &hellip;</div>
-    </section>
     <main>
         <button type="button" id="signout">Sign out</button>
+        <section class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            <h3>Get following advanced features:</h3>
+                        </td>
+                        <td>
+                            <h3>Get following visual settings:</h3>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td> - Audio comparison for two audio sources&emsp;</td>
+                        <td> - Audio clipping</td>
+                    </tr>
+                    <tr>
+                        <td> - Pink noise generator</td>
+                        <td> - Line weight</td>
+                    </tr>
+                    <tr>
+                        <td> - Tone generator</td>
+                        <td> - Line color</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td> - Size of the circle in the line option</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="firebaseui-auth-container">
+            <div id="loader">Loading &hellip;</div>
+        </section>
         <div id="subscribe">
             <h2>Subscribe</h2>
+            <p>Choose one of the following membership plans. Note that both unlock the same features. If you really like
+                and want to support soundvisualiser.com, you can subscribe to the premium plan.</p>
             <section class="products"></section>
         </div>
         <section id="my-subscription">
@@ -35,7 +69,15 @@
                 <button type="submit">Subscribe</button>
             </form>
         </div>
+        <p class="break">&nbsp;</p>
     </template>
+    <br>
+    <div
+        style="background-color: #17171d; position: fixed; bottom: 0; width: 100vw; padding-top: 10px; padding-bottom: 15px; border-top: 1px solid #272731;">
+        <form action="/" style="display: flex; justify-content: center;">
+            <button type="submit">Go Back to main page</button>
+        </form>
+    </div>
 
     <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 

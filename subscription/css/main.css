@@ -7,8 +7,7 @@ body {
   }
   
   main {
-    display: none;
-    margin: 4rem auto 6rem;
+    margin: 2rem auto 4rem;
     max-width: 650px;
     width: 90vw;
   }
@@ -34,8 +33,18 @@ body {
     display: grid;
     gap: 2rem;
     grid-template-columns: repeat(2, 1fr);
-    margin-top: 3rem;
   }
+
+  .break {
+    display: none;
+  }
+
+  @media (max-width: 650px) {
+    .break{
+      display: contents;
+    }
+  }
+
   
   .product img {
     width: 300px;
@@ -85,6 +94,7 @@ body {
   #subscribe,
   #my-subscription {
     display: none;
+    margin-top: -70px;
   }
   
   /* Test card number */
