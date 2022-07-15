@@ -83,9 +83,9 @@ function startDataListeners() {
         const product = doc.data();
         const container = template.content.cloneNode(true);
 
-        container.querySelector('h2').innerText = product.name.toUpperCase();
+        container.querySelector('h2').innerText = product.name;
         container.querySelector('.description').innerText =
-          product.description?.toUpperCase() || '';
+          product.description || '';
         // Prices dropdown
         priceSnap.docs.forEach((doc) => {
           const priceId = doc.id;
@@ -95,8 +95,7 @@ function startDataListeners() {
             `${new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: priceData.currency,
-            }).format((priceData.unit_amount / 100).toFixed(2))} per ${priceData.interval ?? 'once'
-            }`
+            }).format((priceData.unit_amount / 100).toFixed(2))} ${priceData.interval}`
           );
           const option = document.createElement('option');
           option.value = priceId;
