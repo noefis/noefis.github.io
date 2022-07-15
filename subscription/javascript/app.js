@@ -133,11 +133,10 @@ function startDataListeners() {
       const priceData = (await subscription.price.get()).data();
       document.querySelector(
         '#my-subscription p'
-      ).textContent = `You are paying ${new Intl.NumberFormat('en-US', {
+      ).textContent = `You are paid ${new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: priceData.currency,
-      }).format((priceData.unit_amount / 100).toFixed(2))} per ${priceData.interval
-        }, giving you the role: ${await getCustomClaimRole()}. 🥳`;
+      }).format((priceData.unit_amount / 100).toFixed(2))}, giving you the role: advanced user. 🥳`;
     });
 }
 
