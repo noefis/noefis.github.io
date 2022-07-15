@@ -95,7 +95,7 @@ function startDataListeners() {
             `${new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: priceData.currency,
-            }).format((priceData.unit_amount / 100).toFixed(2))} ${priceData.interval}`
+            }).format((priceData.unit_amount / 100).toFixed(2))}`
           );
           const option = document.createElement('option');
           option.value = priceId;
