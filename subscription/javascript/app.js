@@ -133,7 +133,7 @@ function startDataListeners() {
       const priceData = (await subscription.price.get()).data();
       document.querySelector(
         '#my-subscription p'
-      ).textContent = `You are paid ${new Intl.NumberFormat('en-US', {
+      ).textContent = `You paid ${new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: priceData.currency,
       }).format((priceData.unit_amount / 100).toFixed(2))}, giving you the role: advanced user. 🥳`;
