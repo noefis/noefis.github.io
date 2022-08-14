@@ -182,7 +182,7 @@ async function subscribe(event) {
   // For one time payments set mode to payment.
   if (prices[selectedPrice.price]?.type === 'one_time') {
     checkoutSession.mode = 'payment';
-    checkoutSession.payment_method_types = ['card', 'sepa_debit', 'sofort'];
+    checkoutSession.payment_method_types = ['card'];
   }
 
   const docRef = await db
