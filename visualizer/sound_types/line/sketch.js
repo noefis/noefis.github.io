@@ -244,7 +244,7 @@ function draw() {
     } else if (playing) {
 
         if (mouse) {
-            freq = constrain(map(mouseX - 12, 0, width, 50, 9410), 50, 9350);
+            freq = constrain(map(mouseX - 12, 0, width, 50, 18910), 50, 18350);
             freq_amp = constrain(map((wh - mouseY), height, 0, 1, 0), 0, 1);
         }
         text('freq: ' + Math.floor(freq) + ' Hz', 20, 20);

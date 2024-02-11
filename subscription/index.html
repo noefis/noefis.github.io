@@ -11,40 +11,147 @@
     <main>
         <button type="button" id="signout">Sign out</button>
         <section class="content">
-            <table>
-                <thead>
-                    <tr>
-                        <td>
-                            <h3>Get following advanced features:</h3>
-                        </td>
-                        <td>
-                            <h3>Get following visual settings:</h3>
-                        </td>
-                    </tr>
-                </thead>
+            <br>
+            <br>
+            <h2>Unlock Advanced Features & Visual Settings</h2>
+            <table class="desktop-view">
                 <tbody>
                     <tr>
-                        <td> - Audio comparison for two audio sources&emsp;</td>
-                        <td> - Attack</td>
-                    </tr>
-                    <tr>
-                        <td> - Pink noise generator</td>
-                        <td> - Audio clipping</td>
-                    </tr>
-                    <tr>
-                        <td> - Tone generator</td>
-                        <td> - Line weight</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td> - Line color</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td> - Size of the circle in the line option</td>
+                        <td style="vertical-align: top; padding-right: 15px;">
+                            <table class="feature-table">
+                                <tbody>
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/audio_comparison.svg"
+                                                alt="Audio Comparison Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>Advanced Audio Analysis:</strong> Compare the frequency components
+                                            of two audio sources.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/pink_noise.svg" alt="Pink Noise Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>Pink Noise:</strong> Use our pink noise generator for accurate
+                                            acoustic testing and equipment calibration.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/tone_generator.svg" alt="Tone Generator Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>Tone Generator:</strong> Generate precise tones for system
+                                            calibration and audio analysis.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td style="vertical-align: top;">
+                            <table class="feature-table">
+                                <tbody>
+
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/attack.svg" alt="Attack Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>Refined Attack Control:</strong> Customize the visual bars response
+                                            speed
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/audio_clipping.svg" alt="Audio Clipping Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>Audio Clipping:</strong> Focus on essential frequencies by cutting
+                                            off low-volume clutter.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="vertical-align: top;">
+                                            <img class="icon" src="svg/line_weight.svg" alt="Line Weight Icon" />
+                                        </td>
+                                        <td>
+                                            <strong>And More: </strong> Adjust line weight and color for improved
+                                            visualization control. Visualize audio intensity with adjustable circle
+                                            sizes
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+            <table class="mobile-view feature-table">
+                <tbody>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/audio_comparison.svg" alt="Audio Comparison Icon" />
+                        </td>
+                        <td>
+                            <strong>Advanced Audio Analysis:</strong> Compare the frequency components
+                            of two audio sources.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/pink_noise.svg" alt="Pink Noise Icon" />
+                        </td>
+                        <td>
+                            <strong>Pink Noise:</strong> Use our pink noise generator for accurate
+                            acoustic testing and equipment calibration.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/tone_generator.svg" alt="Tone Generator Icon" />
+                        </td>
+                        <td>
+                            <strong>Tone Generator:</strong> Generate precise tones for system
+                            calibration and audio analysis.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/attack.svg" alt="Attack Icon" />
+                        </td>
+                        <td>
+                            <strong>Refined Attack Control:</strong> Customize the visual bars response
+                            speed
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/audio_clipping.svg" alt="Audio Clipping Icon" />
+                        </td>
+                        <td>
+                            <strong>Audio Clipping:</strong> Focus on essential frequencies by cutting
+                            off low-volume clutter.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <img class="icon" src="svg/line_weight.svg" alt="Line Weight Icon" />
+                        </td>
+                        <td>
+                            <strong>And More: </strong> Adjust line weight and color for improved
+                            visualization control. Visualize audio intensity with adjustable circle
+                            sizes
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section id="special-offer" style="display: none;">
+            <h2 id="special-offer-title">&nbsp;</h2>
+            <p id="special-offer-description">&nbsp;</p>
         </section>
         <section id="firebaseui-auth-container">
             <div id="loader">Loading &hellip;</div>
@@ -55,32 +162,28 @@
         <section id="my-subscription">
             <h2>My subscription</h2>
             <p></p>
-            <h3>View invoices, update payment methods</h3>
             <button id="billing-portal-button">Access customer portal</button>
         </section>
         <br>
     </main>
     <template id="product">
-        <div class="product" style="width: 500px;">
-            <img src="" alt="" />
+        <div class="product" style="min-width: 300px; width: 80vw; max-width: 500px;">
             <h2>name</h2>
             <p class="description">description</p>
             <form class="product-form">
-                <label for="price">Choose currency</label>
-                <select id="price" name="price"></select>
-                <br>
-                <br>
-                <button type="submit">Buy</button>
+                <div class="select-wrapper">
+                    <select id="price" name="price"></select>
+                </div>
+                <button type="submit" class="buy">Buy</button>
             </form>
         </div>
         <p class="break">&nbsp;</p>
         <br>
-        <b class="discount">Use code "EARLY" to get 80% off<br>This offer is limited to one year</b>
     </template>
     <div
-        style="background-color: #11151a; position: fixed; bottom: 0; width: 100vw; padding-top: 10px; padding-bottom: 15px; border-top: 1px solid #272731;">
-        <form action="/" style="display: flex; justify-content: center;">
-            <button type="submit">Go Back to main page</button>
+        style="background-color: #11151a7e; position: fixed; bottom: 0; width: 100vw; margin-left: -8px; padding-top: 10px; padding-bottom: 15px; border-top: 1px solid #272731;">
+        <form action="/#/visualiser" style="display: flex; justify-content: center;">
+            <button type="submit">Go back to visualizer</button>
         </form>
     </div>
 

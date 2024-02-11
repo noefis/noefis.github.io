@@ -135,10 +135,12 @@ function setup() {
         if (Number(localStorage.getItem('attack')) !== attack && localStorage.getItem('attack') !== null) {
             attack = Number(localStorage.getItem('attack'));
             fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
         }
         if (Number(localStorage.getItem('barMultiple')) !== pow && localStorage.getItem('barMultiple') !== null) {
             pow = Number(localStorage.getItem('barMultiple'));
             fft = new p5.FFT(attack, Math.pow(2, pow));
+            fft.setInput(mic);
         }
         record();
     }, false);

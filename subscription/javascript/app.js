@@ -95,14 +95,21 @@ function startDataListeners() {
             `${new Intl.NumberFormat('en-US', {
               style: 'currency',
               currency: priceData.currency,
-            }).format((priceData.unit_amount / 100).toFixed(2))}`
+              minimumFractionDigits: priceData.currency.toLowerCase() === 'jpy' ? 0 : 2, // Set minimumFractionDigits to 0 for JPY
+            }).format(
+              priceData.currency.toLowerCase() === 'jpy' ?
+                ((priceData.unit_amount).toFixed(0)) :
+                ((priceData.unit_amount / 100).toFixed(2))
+
+            )}`
           );
           const option = document.createElement('option');
           option.value = priceId;
           option.appendChild(content);
           container.querySelector('#price').appendChild(option);
         });
-
+        container.querySelector('#price').options[5].selected = true;
+        reorderPriceOptionsBasedOnUserCurrency(container);
         if (product.images.length) {
           const img = container.querySelector('img');
           img.src = product.images[0];
@@ -118,8 +125,7 @@ function startDataListeners() {
   // Get all subscriptions for the customer
   db.collection('customers')
     .doc(currentUser)
-    .collection('subscriptions')
-    .where('status', 'in', ['trialing', 'active'])
+    .collection('payments')
     .onSnapshot(async (snapshot) => {
       if (snapshot.empty) {
         // Show products
@@ -129,15 +135,76 @@ function startDataListeners() {
       document.querySelector('#subscribe').style.display = 'none';
       document.querySelector('#my-subscription').style.display = 'block';
       // In this implementation we only expect one Subscription to exist
-      const subscription = snapshot.docs[0].data();
-      const priceData = (await subscription.price.get()).data();
+      const priceData = snapshot.docs[0].data();
+      console.log(priceData);
       document.querySelector(
         '#my-subscription p'
       ).textContent = `You paid ${new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: priceData.currency,
-      }).format((priceData.unit_amount / 100).toFixed(2))}, giving you the role: advanced user. 🥳`;
+      }).format((priceData.amount_received / 100).toFixed(2))}, giving you the role: advanced user. 🥳`;
     });
+}
+
+async function reorderPriceOptionsBasedOnUserCurrency(container) {
+  const priceSelect = container.querySelector('#price'); // or '.price-select' if you switch to class
+  const userCurrency = await getUserCurrency(); // Assume this function exists and returns something like "USD"
+  // Assume `container` is the parent element that contains your price dropdown
+
+  // Find the option that matches the user's currency
+  for (let i = 0; i < priceSelect.options.length; i++) {
+    const option = priceSelect.options[i];
+    if (prices[option.value].currency.toLowerCase() === userCurrency.toLowerCase()) {
+      option.selected = true;
+      // Move this option to the front
+      priceSelect.prepend(option);
+      break; // Stop the loop once the matching option is found and moved
+    }
+  }
+}
+
+async function getUserCurrency() {
+  const countryCode = await fetchUserCountry();
+  // Default to USD if the country code is not found or an error occurred
+  const currency = countryCurrencyMap[countryCode] || 'USD';
+  return currency;
+}
+
+const countryCurrencyMap = {
+  // Eurozone countries
+  "AT": "EUR", "BE": "EUR", "CY": "EUR", "EE": "EUR",
+  "FI": "EUR", "FR": "EUR", "DE": "EUR", "GR": "EUR",
+  "IE": "EUR", "IT": "EUR", "LV": "EUR", "LT": "EUR",
+  "LU": "EUR", "MT": "EUR", "NL": "EUR", "PT": "EUR",
+  "SK": "EUR", "SI": "EUR", "ES": "EUR", "VA": "EUR",
+
+  // Countries officially using the US Dollar
+  "US": "USD", "EC": "USD", "SV": "USD", "PA": "USD",
+  "TL": "USD", "FM": "USD", "MH": "USD", "PW": "USD",
+  "ZW": "USD",
+
+  // Specific countries
+  "CH": "CHF", // Switzerland
+  "JP": "JPY", // Japan
+  "IN": "INR", // India
+  "GB": "GBP", // United Kingdom
+  "RU": "RUB", // Russia
+  "PH": "PHP", // Philippines
+  "CA": "CAD", // Canada
+};
+
+async function fetchUserCountry() {
+  try {
+    const response = await fetch('https://api.country.is/');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return data.country; // Returns the country code, e.g., "US"
+  } catch (error) {
+    console.error('Error fetching the user country:', error);
+    return null; // Handle the error as appropriate for your application
+  }
 }
 
 /**
@@ -173,8 +240,8 @@ async function subscribe(event) {
     collect_shipping_address: true,
     allow_promotion_codes: true,
     line_items: [selectedPrice],
-    success_url: window.location.origin,
-    cancel_url: window.location.origin,
+    success_url: window.location.origin + '/subscription/index.html',
+    cancel_url: window.location.origin + '/subscription/index.html',
     metadata: {
       key: 'value',
     },
@@ -215,7 +282,10 @@ document
       .app()
       .functions(functionLocation)
       .httpsCallable('ext-firestore-stripe-payments-createPortalLink');
-    const { data } = await functionRef({ returnUrl: window.location.origin });
+    const { data } = await functionRef({
+      returnUrl: window.location.origin + '/subscription/index.html',
+      cancel_url: window.location.origin + '/subscription/index.html'
+    });
     window.location.assign(data.url);
   });
 
@@ -224,4 +294,81 @@ async function getCustomClaimRole() {
   await firebase.auth().currentUser.getIdToken(true);
   const decodedToken = await firebase.auth().currentUser.getIdTokenResult();
   return decodedToken.claims.stripeRole;
+}
+
+
+// Special offers handler
+displaySpecialOffer();
+function displaySpecialOffer() {
+  var couponCode = getCouponCode();
+  var specialOffers = {
+    "NEWYEAR20": { title: "Celebrate the New Year with Sound!", description: "Start the year on a high note with our digital sound visualizer. Get 20% off today with code: <b>NEWYEAR20</b>" },
+    "TECHDAY20": { title: "Happy Tech Day!", description: "On National Technology Day, dive into the realm of sound visualization. Enjoy 20% off with code: <b>TECHDAY20</b>" },
+    "LOVE20": { title: "Share the Love of Sound", description: "Celebrate Valentine's Day with music and visuals. Treat your loved ones (or yourself) to 20% off using code: <b>LOVE20</b>" },
+    "HAPPY25": { title: "Spread Joy Through Sound", description: "In honor of International Day of Happiness, immerse yourself in the joy of music. Enjoy 25% off today with code: <b>HAPPY25</b>" },
+    "MUSICDAY30": { title: "Let Music Paint Your World", description: "Join the celebration of World Music Day and experience sound in a new light. Save 30% with code: <b>MUSICDAY30</b>" },
+    "SWISS20": { title: "Happy Swiss National Day!", description: "On Swiss National Day, discover the precision and quality of our sound visualizer. Enjoy 20% off using code: <b>SWISS20</b>" },
+    "SOUNDVISUALISERANNIVERSARY": { title: "Today is Soundvisualiser.com's Birthday!", description: "Celebrate our anniversary with 30% off our sound visualizer using code: <b>SOUNDVISUALISERANNIVERSARY</b>" },
+    "READ20": { title: "Read Between the Sounds", description: "In honor of International Literacy Day, explore the language of music with our visualizer. Get 20% off with code: <b>READ20</b>" },
+    "SPOOKY20": { title: "Spooky Scary Sounds", description: "Get into the Halloween spirit with eerie sounds and visuals. Enjoy 20% off today using code: <b>SPOOKY20</b>" },
+    "BLACKFRIDAY30": { title: "Black Friday Sale!", description: "Score big savings on Black Friday! Take 30% off our sound visualizer with code: <b>BLACKFRIDAY30</b>" },
+    "XMAS20": { title: "Jingle All the Way with Sound", description: "Make your holidays merry and bright with sound and visuals. Save 20% throughout the Christmas season using code: <b>XMAS20</b>" }
+  }
+
+  if (couponCode !== null) {
+    var specialOffer = specialOffers[couponCode];
+    if (specialOffer) {
+      var specialOfferTitle = document.getElementById("special-offer-title");
+      var specialOfferDescription = document.getElementById("special-offer-description");
+      specialOfferTitle.innerHTML = specialOffer.title;
+      specialOfferDescription.innerHTML = specialOffer.description;
+      var specialOfferContainer = document.getElementById("special-offer");
+      specialOfferContainer.style.display = "inherit";
+    }
+  }
+}
+
+function getCouponCode() {
+  var currentDate = new Date();
+  var month = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month (0-11)
+  var day = currentDate.getDate();
+
+  var couponCodes = {
+    "31.12": "NEWYEAR20",
+    "1.1": "NEWYEAR20",
+    "6.1": "TECHDAY20",
+    "14.2": "LOVE20",
+    "20.3": "HAPPY25",
+    "21.6": "MUSICDAY30",
+    "1.8": "SWISS20",
+    "18.8": "SOUNDVISUALISERANNIVERSARY",
+    "8.9": "READ20",
+    "31.10": "SPOOKY20",
+    "20.12": "XMAS20",
+    "21.12": "XMAS20",
+    "22.12": "XMAS20",
+    "23.12": "XMAS20",
+    "24.12": "XMAS20",
+    "25.12": "XMAS20",
+    "26.12": "XMAS20",
+  };
+
+  // Calculate Black Friday (last Friday of November)
+  var blackFriday = new Date(currentDate.getFullYear(), 10, 30); // Month is zero-based (0-11), so 10 represents November
+  while (blackFriday.getDay() !== 5) { // 5 represents Friday
+    blackFriday.setDate(blackFriday.getDate() - 1); // Move to the previous day
+  }
+  var bfMonth = blackFriday.getMonth() + 1;
+  var bfDay = blackFriday.getDate();
+  couponCodes[bfDay + "." + bfMonth] = "BLACKFRIDAY30";
+
+  // Generate key in the format "month/day"
+  var key = day + "." + month;
+
+  // Check if coupon code exists for the current date
+  if (couponCodes[key]) {
+    return couponCodes[key];
+  } else {
+    return null;
+  }
 }

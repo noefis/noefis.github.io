@@ -14,8 +14,20 @@ html {
   
   main {
     margin: 2rem auto 4rem;
-    max-width: 650px;
+    max-width: 700px;
     width: 90vw;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 5px;
+    margin-right: 12px;
+  }
+
+  .feature-table {
+    border-collapse: separate; 
+    border-spacing: 0 15px;
   }
   
   #firebaseui-auth-container {
@@ -41,6 +53,10 @@ html {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .description {
+    display: none;
+  }
+
   .break {
     display: none;
   }
@@ -59,16 +75,97 @@ html {
     100% {opacity: 0.6;font-size: 19.9px;}
   }
 
+  #special-offer-title {
+    margin-top: 30px;
+    display: inline-block;
+    animation-delay: 1s;
+    animation-duration: 1.5s;
+    animation-name: buy-animation;
+  }
 
-  @media (max-width: 650px) {
-    .break{
-      display: contents;
+  #special-offer-description {
+    margin-top: 0;
+  }
+
+  .buy {
+    margin-top: 21px;
+    font-size: 19px;
+    animation-delay: 2s;
+    animation-duration: 1.8s; /* Adjust duration to your preference */
+    animation-name: buy-animation;
+    transform-origin: center; /* Ensure rotation happens around the center */
+  }
+  
+  @keyframes buy-animation {
+    0% {
+      transform: scale(1) rotate(0deg);
+    }
+    30% {
+      transform: scale(1.2) rotate(-10deg); /* Scale up and rotate slightly */
+    }
+    40% {
+      transform: scale(1.1) rotate(10deg); /* Scale down a bit and rotate to the other side */
+    }
+    50% {
+      transform: scale(1.2) rotate(-10deg); /* Scale up again and rotate back */
+    }
+    60% {
+      transform: scale(1.1) rotate(10deg); /* Scale down a bit and rotate to the other side again */
+    }
+    70% {
+      transform: scale(1.15) rotate(0deg); /* Scale up a bit for a final spring effect */
+    }
+    100% {
+      transform: scale(1) rotate(0deg); /* Return to original state */
     }
   }
 
+  .select-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
   
-  .product img {
-    width: 300px;
+  .select-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 10px; /* Adjust based on the exact positioning you need */
+    pointer-events: none;
+    /* Custom arrow styles or use an icon */
+  }
+  
+  select#price {
+    cursor: pointer;
+    -webkit-appearance: none; /* For Safari */
+    -moz-appearance: none; /* For Firefox */
+    appearance: none; /* For modern browsers */
+    padding-right: 5px;
+  }
+
+  .desktop-view {
+    display: table;
+  }
+  .mobile-view {
+    display: none;
+  }
+
+
+  @media (max-width: 500px) {
+    .break{
+      display: contents;
+    }
+
+    .desktop-view {
+      display: none;
+    }
+    .mobile-view {
+      display: table;
+    }
+
+    .feature-table {
+      border-collapse: separate; 
+      border-spacing: 0 20px;
+    }
   }
   
   .product input {
@@ -84,15 +181,19 @@ html {
     display: block;
     cursor: pointer;
     background: #90caf9;
-    color: #11151a;
-    text-transform: uppercase;
+    color: #26303d;
     border: none;
     border-radius: 0.15rem;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.25rem;
     margin-top: 0.25rem;
     padding: 0.5rem;
+    transition: background 0.25s ease;
+  }
+
+  button:hover {
+    background: #4eabf8;
   }
   
   button:disabled {
