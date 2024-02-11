@@ -79,13 +79,13 @@ function updateSettings() {
     }
 
     if (localStorage.getItem('height') === null) {
-        h = 1;
+        h = 0.6;
     } else {
         h = Number(localStorage.getItem('height')) / 50;
     }
 
     if (localStorage.getItem('clipping') === null) {
-        clipping = 100;
+        clipping = 0;
     } else {
         clipping = Number(localStorage.getItem('clipping'));
     }

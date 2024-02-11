@@ -37,7 +37,7 @@ if (localStorage.getItem('attack') === null) {
 function updateSettings() {
 
     if (localStorage.getItem('height') === null) {
-        h = 1;
+        h = 0.6;
     } else {
         h = Number(localStorage.getItem('height')) / 50;
     }

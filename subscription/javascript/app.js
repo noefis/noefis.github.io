@@ -136,7 +136,7 @@ function startDataListeners() {
       document.querySelector('#my-subscription').style.display = 'block';
       // In this implementation we only expect one Subscription to exist
       const priceData = snapshot.docs[0].data();
-      console.log(priceData);
+      localStorage.setItem('u_role', "advanced");
       document.querySelector(
         '#my-subscription p'
       ).textContent = `You paid ${new Intl.NumberFormat('en-US', {
