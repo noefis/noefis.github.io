@@ -18,7 +18,7 @@ let lineCircleShow;
 let alpha;
 let clipping;
 
-let attack = 0.9;
+let attack = 0.8;
 
 let fftcopy;
 let fftpause = false;
@@ -35,7 +35,7 @@ if (localStorage.getItem('barMultiple') === null) {
 }
 
 if (localStorage.getItem('attack') === null) {
-    attack = 0.9;
+    attack = 0.8;
 } else {
     attack = localStorage.getItem('attack');
 }

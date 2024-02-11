@@ -11,7 +11,7 @@ let barRange = [];
 let pow;
 let lineWeight;
 
-let attack = 0.9;
+let attack = 0.8;
 
 let fftcopy1;
 let fftcopy2;
@@ -29,7 +29,7 @@ if (localStorage.getItem('barMultiple') === null) {
 }
 
 if (localStorage.getItem('attack') === null) {
-    attack = 0.9;
+    attack = 0.8;
 } else {
     attack = localStorage.getItem('attack');
 }
