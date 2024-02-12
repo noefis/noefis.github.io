@@ -83,9 +83,7 @@ function startDataListeners() {
         const product = doc.data();
         const container = template.content.cloneNode(true);
 
-        container.querySelector('h2').innerText = product.name;
-        container.querySelector('.description').innerText =
-          product.description || '';
+        container.querySelector('h2').innerText = product.description || 'One-time Payment for Lifetime Access';
         // Prices dropdown
         priceSnap.docs.forEach((doc) => {
           const priceId = doc.id;
